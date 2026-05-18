@@ -10,3 +10,5 @@
 
 System rezerwacji miejsc w kinie oparty na MongoDB. Aplikacja umożliwia przeglądanie repertuaru, wybór seansu oraz dynamiczne rezerwowanie i blokowanie miejsc w czasie rzeczywistym. Backend zarządza danymi o użytkownikach, salach i rezerwacjach w bazie NoSQL, zapewniając skalowalność i prostą strukturę dokumentów.
 
+### TODO:
+schemat przez przykład
