@@ -1,0 +1,26 @@
+{
+  "name": "projekt_bd",
+  "version": "1.0.0",
+  "description": "- MongoDB <img width=\"32\" height=\"32\" alt=\"mongodb-leaf_32x32\" src=\"https://github.com/user-attachments/assets/d44baa95-a217-4872-9db9-0e371927d8b8\" /> - NodeJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BartekK2/Projekt_BD.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/BartekK2/Projekt_BD/issues"
+  },
+  "homepage": "https://github.com/BartekK2/Projekt_BD#readme",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.6.1"
+  }
+}
