@@ -27,5 +27,5 @@ mongoose
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`serwer dziala na porcie ${PORT} - http://localhost:${PORT}`);
+  console.log(`serwer dziala na porcie ${PORT}`);
 });
