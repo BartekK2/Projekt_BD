@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Movie = require("../models/Movie");
 
-//GET /api/movies
+//pobierz wszystkie filmy
 router.get("/", async (req, res) => {
   try {
     const movies = await Movie.find();
@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-//GET /api/movies/:id
+//pobierz jeden film po id
 router.get("/:id", async (req, res) => {
   try {
     const movie = await Movie.findById(req.params.id);
@@ -24,7 +24,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-//POST /api/movies
+//stworz nowy film
 router.post("/", async (req, res) => {
   const movie = new Movie({
     title: req.body.title,
@@ -42,7 +42,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-//PUT /api/movies/:id
+//zaaktualizuj film
 router.put("/:id", async (req, res) => {
   try {
     const updatedMovie = await Movie.findByIdAndUpdate(
@@ -58,7 +58,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-//DELETE /api/movies/:id
+//usun film
 router.delete("/:id", async (req, res) => {
   try {
     const deletedMovie = await Movie.findByIdAndDelete(req.params.id);
