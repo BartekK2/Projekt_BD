@@ -7,6 +7,9 @@ const app = express();
 
 app.use(express.json());
 
+const moviesRouter = require("./routes/movies");
+app.use("/api/movies", moviesRouter);
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("polaczono z baza MongoDB"))
