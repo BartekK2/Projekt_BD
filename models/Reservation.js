@@ -12,29 +12,24 @@ const reservationSchema = new mongoose.Schema(
       ref: "Screening",
       required: true,
     },
-    // TUTAJ DODAJEMY ZABEZPIECZONĄ ZNIŻKĘ
     appliedDiscount: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "PersonalDiscounts",
       default: null,
       validate: {
         validator: async function (discountId) {
-          // Jeśli rezerwacja jest bez zniżki (null), to jest to poprawne
-          if (!discountId) return true; 
+          if (!discountId) return true;
 
-          // Pobieramy model zniżki, żeby sprawdzić, do kogo ona przypisana
           const DiscountModel = mongoose.model("PersonalDiscounts");
           const discount = await DiscountModel.findById(discountId);
 
-          // Zwróci false, jeśli ktoś podał ID zniżki, której nie ma w bazie
-          if (!discount) return false; 
+          if (!discount) return false;
 
-          // KLUCZOWY MOMENT: Porównujemy ID usera ze zniżki z ID usera z TEJ rezerwacji.
-          // Używamy .toString(), ponieważ w Mongoose ObjectId to obiekty i zwykłe "===" by nie zadziałało
           return discount.user.toString() === this.user.toString();
         },
-        message: "Odmowa: Próbujesz użyć zniżki, która nie należy do Twojego konta!"
-      }
+        message:
+          "Odmowa: Próbujesz użyć zniżki, która nie należy do Twojego konta",
+      },
     },
     bookedSeats: [
       {
