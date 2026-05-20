@@ -13,12 +13,16 @@ const usersRouter = require("./routes/users");
 const screeningsRouter = require("./routes/screenings");
 const discountsRouter = require("./routes/discounts");
 const reservationsRouter = require("./routes/reservations");
+const raportsRouter = require("./routes/reports");
+
 
 app.use("/api/movies", moviesRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/screenings", screeningsRouter);
 app.use("/api/discounts", discountsRouter);
 app.use("/api/reservations", reservationsRouter);
+app.use("/api/reports", raportsRouter);
+
 
 mongoose
   .connect(process.env.MONGO_URI)
