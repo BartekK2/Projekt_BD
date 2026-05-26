@@ -1,14 +1,18 @@
-const mongoose = require('mongoose');
-const Reservation = require('./models/Reservation'); 
-const Screening = require('./models/Screening');
-const PersonalDiscounts = require('./models/PersonalDiscounts');
+const mongoose = require("mongoose");
+const Reservation = require("./models/Reservation");
+const Screening = require("./models/Screening");
+const PersonalDiscounts = require("./models/PersonalDiscounts");
 
-async function bookTickets(userId, screeningId, requestedSeats, discountId = null) {
+async function bookTickets(
+  userId,
+  screeningId,
+  requestedSeats,
+  discountId = null
+) {
   const session = await mongoose.startSession();
 
   try {
     const result = await session.withTransaction(async () => {
-      
       const screening = await Screening.findById(screeningId).session(session);
       if (!screening) throw new Error("Nie znaleziono takiego seansu.");
 
@@ -19,10 +23,16 @@ async function bookTickets(userId, screeningId, requestedSeats, discountId = nul
           (s) => s.row === reqSeat.row && s.number === reqSeat.number
         );
 
-        if (seatIndex === -1) throw new Error(`Miejsce Rząd ${reqSeat.row}, Numer ${reqSeat.number} nie istnieje.`);
-        
+        if (seatIndex === -1)
+          throw new Error(
+            `Miejsce Rząd ${reqSeat.row}, Numer ${reqSeat.number} nie istnieje.`
+          );
+
         const seat = screening.seats[seatIndex];
-        if (!seat.isAvailable) throw new Error(`Miejsce Rząd ${reqSeat.row}, Numer ${reqSeat.number} jest już zajęte!`);
+        if (!seat.isAvailable)
+          throw new Error(
+            `Miejsce Rząd ${reqSeat.row}, Numer ${reqSeat.number} jest już zajęte!`
+          );
 
         screening.seats[seatIndex].isAvailable = false;
         basePrice += screening.ticketPrice;
@@ -33,7 +43,9 @@ async function bookTickets(userId, screeningId, requestedSeats, discountId = nul
       let finalPrice = basePrice;
 
       if (discountId) {
-        const discount = await PersonalDiscounts.findById(discountId).session(session);
+        const discount = await PersonalDiscounts.findById(discountId).session(
+          session
+        );
 
         if (!discount) {
           throw new Error("Podana zniżka nie istnieje.");
@@ -47,31 +59,35 @@ async function bookTickets(userId, screeningId, requestedSeats, discountId = nul
           throw new Error("Ta zniżka już wygasła.");
         }
 
+        if (discount.isUsed) {
+          throw new Error("Ta zniżka została już wykorzystana.");
+        }
+
         const discountAmount = basePrice * (discount.percentDiscount / 100);
         finalPrice = basePrice - discountAmount;
+
+        discount.isUsed = true;
+        await discount.save({ session });
       }
 
       const newReservation = await Reservation.create(
-        [{
-          user: userId,
-          screening: screeningId,
-          appliedDiscount: discountId,
-          bookedSeats: requestedSeats,
-          totalPrice: finalPrice,
-          status: "CONFIRMED"
-        }],
+        [
+          {
+            user: userId,
+            screening: screeningId,
+            appliedDiscount: discountId,
+            bookedSeats: requestedSeats,
+            totalPrice: finalPrice,
+            status: "CONFIRMED",
+          },
+        ],
         { session }
       );
-
-      // TODO:
-      // w sumie jeśli zniżki chcemy mieć jednorazowo to tutaj też trzeba
-      // zaznaczyć że wykorzystana
 
       return newReservation[0];
     });
 
     return result;
-
   } catch (error) {
     console.error("Błąd rezerwacji:", error.message);
     throw error;
@@ -79,3 +95,5 @@ async function bookTickets(userId, screeningId, requestedSeats, discountId = nul
     session.endSession();
   }
 }
+
+module.exports = { bookTickets };
