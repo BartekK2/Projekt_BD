@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Reservation = require("../models/Reservation");
-const { bookTickets } = require("../addreservation");
+const { bookTickets } = require("../addReservations");
 
 //pobierz historie rezerwacji (z dolaczeniem danych o uzytkowniku, seansie, filmie i znizce)
 router.get("/", async (req, res) => {
