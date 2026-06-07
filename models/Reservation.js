@@ -43,6 +43,12 @@ const reservationSchema = new mongoose.Schema(
       enum: ["CONFIRMED", "CANCELLED"],
       default: "CONFIRMED",
     },
+    customAddons: {
+      //dowolna struktura danych bez wczesniejszego definiowania kolumn (TYLKO W MONGODB)
+      //np. { "snack": "Popcorn", "size": "XL" } - dowolne zyczenia klienta
+      type: mongoose.Schema.Types.Mixed,
+      default: {},
+    },
   },
   { timestamps: true }
 );

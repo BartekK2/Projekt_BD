@@ -9,17 +9,22 @@ const personalDiscount = new mongoose.Schema(
     },
     title: { type: String, required: true },
     percentDiscount: { type: Number, required: true },
-    expirationDate: { 
+    expirationDate: {
       type: Date,
       default: () => Date.now() + 14 * 24 * 60 * 60 * 1000, // 14 dni od przypisania
-      required:false,
+      required: false,
       validate: {
-        validator: function(value) {
-          return value > new Date(); 
+        validator: function (value) {
+          return value > new Date();
         },
-        message: 'Data wygaśnięcia zniżki musi być w przyszłości!'
-      }
-    }
+        message: "Data wygaśnięcia zniżki musi być w przyszłości!",
+      },
+    },
+    isUsed: {
+      //czy byla wykorzystana
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 ); //automatyczne createdAt, updatedAt

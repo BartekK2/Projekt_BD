@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Reservation = require("../models/Reservation");
+const { bookTickets } = require("../addReservations");
 
 //pobierz historie rezerwacji (z dolaczeniem danych o uzytkowniku, seansie, filmie i znizce)
 router.get("/", async (req, res) => {
@@ -42,6 +43,27 @@ router.delete("/:id", async (req, res) => {
     res.json({ message: "Rezerwacja usunięta" });
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+});
+
+//glowna operacja transakcyjna - rezerwacja biletow
+router.post("/book", async (req, res) => {
+  try {
+    const { userId, screeningId, requestedSeats, discountId } = req.body;
+
+    const reservation = await bookTickets(
+      userId,
+      screeningId,
+      requestedSeats,
+      discountId
+    );
+
+    res.status(201).json({
+      message: "Rezerwacja zakończona sukcesem!",
+      reservation,
+    });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 });
 
